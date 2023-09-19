@@ -15,3 +15,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "chatan"
 include(":app")
+include(":ktorhandler")
+include(":localstorage")

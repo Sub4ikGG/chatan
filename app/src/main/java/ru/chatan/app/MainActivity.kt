@@ -3,32 +3,41 @@ package ru.chatan.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import ru.chatan.app.ui.WelcomeView
-import ru.chatan.app.ui.theme.ChatanTheme
+import androidx.core.view.WindowCompat
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.transitions.SlideTransition
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import ru.chatan.app.presentation.theme.ChatanTheme
+import ru.chatan.app.presentation.welcome.WelcomeScreen
+import ru.chatan.app.presentation.welcome.WelcomeView
 
+@OptIn(ExperimentalAnimationApi::class)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        WindowCompat.setDecorFitsSystemWindows(
+            window,
+            false
+        )
+
         setContent {
             ChatanTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.error
-                ) {
-                    WelcomeView()
+                val systemUiController = rememberSystemUiController()
+
+                SideEffect {
+                    systemUiController.setStatusBarColor(
+                        color = Color.Transparent,
+                    )
+                }
+
+                Navigator(WelcomeScreen()) {
+                    SlideTransition(it)
                 }
             }
         }

@@ -1,4 +1,4 @@
-package ru.chatan.app.ui.theme
+package ru.chatan.app.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

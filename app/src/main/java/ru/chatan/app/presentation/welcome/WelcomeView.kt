@@ -1,6 +1,5 @@
-package ru.chatan.app.ui
+package ru.chatan.app.presentation.welcome
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -21,18 +20,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.navigator.LocalNavigator
 import ru.chatan.app.R
-import ru.chatan.app.ui.theme.ChatanTheme
+import ru.chatan.app.presentation.elements.BasicBlackButton
+import ru.chatan.app.presentation.signin.SignInScreen
+import ru.chatan.app.presentation.theme.ChatanTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WelcomeView() {
+    val navigator = LocalNavigator.current
     Scaffold(modifier = Modifier.fillMaxSize()) { contentPadding ->
         Box(
             modifier = Modifier
@@ -73,13 +75,12 @@ fun WelcomeView() {
                     Row(
                         modifier = Modifier
                     ) {
-                        BlackButton(
+                        BasicBlackButton(
                             modifier = Modifier
-                                .weight(1f)
-                                .height(48.dp),
+                                .weight(1f),
                             text = "Приступить",
                             onClick = {
-
+                                navigator?.push(SignInScreen())
                             }
                         )
 
