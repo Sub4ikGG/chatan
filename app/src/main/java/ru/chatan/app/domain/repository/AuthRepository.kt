@@ -10,5 +10,6 @@ interface AuthRepository {
 
     suspend fun signIn(signInRequest: SignInRequest): Response<SignInResponseDTO?>
     suspend fun signUp(signUpRequest: SignUpRequest): Response<SignUpResponseDTO?>
+    suspend fun saveToken(token: String, refreshToken: String)
 
 }

@@ -6,9 +6,14 @@ import ru.efremovkirill.ktorhandler.BaseResponse
 
 @Serializable
 data class SignInResponseDTO(
-    val login: String,
-    val password: String
+    val name: String,
+    val token: String,
+    val refreshToken: String
 ) : BaseResponse<SignInResponse> {
     override fun toModel() =
-        SignInResponse(login = login, password = password)
+        SignInResponse(
+            name = name,
+            token = token,
+            refreshToken = refreshToken
+        )
 }

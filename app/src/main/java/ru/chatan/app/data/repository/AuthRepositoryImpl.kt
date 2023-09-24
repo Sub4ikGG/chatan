@@ -7,8 +7,13 @@ import ru.chatan.app.domain.models.auth.SignUpRequest
 import ru.chatan.app.domain.repository.AuthRepository
 import ru.efremovkirill.ktorhandler.KtorClient
 import ru.efremovkirill.ktorhandler.Response
+import ru.efremovkirill.localstorage.LocalStorage
 
 class AuthRepositoryImpl: AuthRepository {
+    private val localStorage by lazy {
+        LocalStorage.newInstance()
+    }
+
     override suspend fun signIn(signInRequest: SignInRequest): Response<SignInResponseDTO?> =
         KtorClient.postSafely(
             path = SIGN_IN_PATH,
@@ -20,6 +25,11 @@ class AuthRepositoryImpl: AuthRepository {
             path = SIGN_UP_PATH,
             body = signUpRequest.toDTO()
         ) ?: Response.empty()
+
+    override suspend fun saveToken(token: String, refreshToken: String) {
+        localStorage.save(LocalStorage.TOKEN, token)
+        localStorage.save(LocalStorage.REFRESH_TOKEN, refreshToken)
+    }
 
     private companion object {
         const val SIGN_IN_PATH = "/sign-in"

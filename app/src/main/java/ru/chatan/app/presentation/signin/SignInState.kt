@@ -7,13 +7,13 @@ data class SignInState(
 ) {
 
     fun loading() =
-        this.copy(isLoading = true)
+        this.copy(isLoading = true, isSignInSuccess = null, error = null)
 
     fun error(errorMessage: String) =
         this.copy(isLoading = false, isSignInSuccess = false, error = errorMessage)
 
     fun success() =
-        this.copy(isLoading = false, isSignInSuccess = true)
+        this.copy(isLoading = false, isSignInSuccess = true, error = null)
 
     companion object {
         fun initial() = SignInState(

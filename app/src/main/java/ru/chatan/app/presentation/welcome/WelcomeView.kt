@@ -28,7 +28,9 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import ru.chatan.app.R
 import ru.chatan.app.presentation.elements.BasicBlackButton
+import ru.chatan.app.presentation.elements.basicClickable
 import ru.chatan.app.presentation.signin.SignInScreen
+import ru.chatan.app.presentation.signup.SignUpScreen
 import ru.chatan.app.presentation.theme.ChatanTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,7 +82,7 @@ fun WelcomeView() {
                                 .weight(1f),
                             text = "Приступить",
                             onClick = {
-                                navigator?.push(SignInScreen())
+                                navigator?.push(SignUpScreen())
                             }
                         )
 
@@ -93,7 +95,10 @@ fun WelcomeView() {
                             Text(
                                 text = "Есть аккаунт?",
                                 textDecoration = TextDecoration.Underline,
-                                color = Color.Black
+                                color = Color.Black,
+                                modifier = Modifier.basicClickable {
+                                    navigator?.push(SignInScreen())
+                                }
                             )
                         }
                     }

@@ -5,6 +5,7 @@ import android.util.Log
 import io.ktor.http.URLProtocol
 import ru.efremovkirill.ktorhandler.KtorClient
 import ru.efremovkirill.localstorage.LocalStorage
+import java.util.UUID
 
 class ChatanApplication: Application() {
 
@@ -13,7 +14,21 @@ class ChatanApplication: Application() {
 
         configureLocalStorage()
         configureKtor()
+        configureDeviceId()
     }
+
+    private fun configureDeviceId() {
+        val localStorage = LocalStorage.newInstance()
+        if (localStorage.has("deviceId")) return
+
+        val deviceId = generateDeviceId()
+        Log.d(TAG, "generateDeviceId: $deviceId")
+
+        localStorage.save("deviceId", deviceId)
+    }
+
+    private fun generateDeviceId() =
+        UUID.nameUUIDFromBytes(System.currentTimeMillis().toString().toByteArray()).toString()
 
     private fun configureLocalStorage() {
         LocalStorage.init(context = applicationContext)

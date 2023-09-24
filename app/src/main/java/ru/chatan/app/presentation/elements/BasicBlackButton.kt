@@ -23,12 +23,14 @@ import ru.chatan.app.presentation.theme.ChatanTheme
 fun BasicBlackButton(
     modifier: Modifier = Modifier,
     text: String = "CHATAN",
+    enabled: Boolean = true,
     loading: Boolean = false,
     onClick: () -> Unit = {}
 ) {
     Button(
         modifier = modifier.height(48.dp),
         shape = RoundedCornerShape(10.dp),
+        enabled = enabled,
         colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
         onClick = {
             if (!loading)

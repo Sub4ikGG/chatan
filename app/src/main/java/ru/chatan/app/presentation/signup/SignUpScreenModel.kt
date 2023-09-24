@@ -1,35 +1,32 @@
-package ru.chatan.app.presentation.signin
+package ru.chatan.app.presentation.signup
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.chatan.app.UNDEFINED_ERROR
-import ru.chatan.app.domain.models.auth.SignInRequest
+import ru.chatan.app.domain.models.auth.SignUpRequest
 import ru.chatan.app.domain.usecases.SaveTokenUseCase
-import ru.chatan.app.domain.usecases.SignInUseCase
+import ru.chatan.app.domain.usecases.SignUpUseCase
 
-class SignInScreenModel(
-    private val signInUseCase: SignInUseCase,
+class SignUpScreenModel(
+    private val signUpUseCase: SignUpUseCase,
     private val saveTokenUseCase: SaveTokenUseCase
-): StateScreenModel<SignInState>(SignInState.initial()) {
+) : StateScreenModel<SignUpState>(SignUpState.initial()) {
 
-    fun send(event: SignInEvent) = coroutineScope.launch(Dispatchers.IO) {
+    fun send(event: SignUpEvent) = coroutineScope.launch(Dispatchers.IO) {
         mutableState.emit(state.value.loading())
 
         when (event) {
-            is SignInEvent.SignIn -> signIn(
-                login = event.login,
-                password = event.password
-            )
+            is SignUpEvent.SignUp -> signUp(login = event.login, password = event.password)
         }
     }
 
-    private suspend fun signIn(login: String, password: String) {
+    private suspend fun signUp(login: String, password: String) {
         mutableState.emit(state.value.loading())
 
         val response =
-            signInUseCase(signInRequest = SignInRequest(name = login, password = password))
+            signUpUseCase(signUpRequest = SignUpRequest(name = login, password = password))
         if (response.code == 200) {
             val data = response.data ?: return mutableState.emit(state.value.error(errorMessage = UNDEFINED_ERROR))
             saveToken(token = data.token, refreshToken = data.refreshToken)

@@ -8,9 +8,9 @@ data class Response<T>(
     @SerialName("code")
     val code: Int,
     @SerialName("message")
-    val responseMessage: String,
+    val responseMessage: String = "",
     @SerialName("data")
-    val data: T,
+    val data: T? = null,
     @SerialName("errors")
     val errors: List<Error>? = null
 ) {

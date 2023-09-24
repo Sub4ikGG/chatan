@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SignInRequestDTO(
-    val login: String,
+    val name: String,
     val password: String
 )

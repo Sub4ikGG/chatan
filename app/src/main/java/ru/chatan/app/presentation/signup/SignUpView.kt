@@ -1,4 +1,4 @@
-package ru.chatan.app.presentation.signin
+package ru.chatan.app.presentation.signup
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -33,8 +33,8 @@ import ru.chatan.app.presentation.elements.BasicToolBarView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignInView(
-    screenModel: SignInScreenModel
+fun SignUpView(
+    screenModel: SignUpScreenModel
 ) {
     val state by screenModel.state.collectAsState()
 
@@ -43,10 +43,13 @@ fun SignInView(
 
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var repeatPassword by remember { mutableStateOf("") }
 
-    if (state.isSignInSuccess == false && state.error != null)
+    val isButtonEnabled = password == repeatPassword
+
+    if (state.isSignUpSuccess == false && state.error != null)
         Toast.makeText(context, state.error.orEmpty(), Toast.LENGTH_SHORT).show()
-    else if (state.isSignInSuccess == true)
+    else if (state.isSignUpSuccess == true)
         navigator?.pop()
 
     Scaffold { contentPadding ->
@@ -59,7 +62,7 @@ fun SignInView(
         ) {
             Column {
                 BasicToolBarView(
-                    text = "Авторизация",
+                    text = "Приступить",
                     backButtonVisible = true,
                     onBackPressed = {
                         navigator?.pop()
@@ -100,16 +103,30 @@ fun SignInView(
                             }
                         )
 
+                        BasicTextFieldView(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = repeatPassword,
+                            hint = "Повтор пароля",
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                            onValueChange = {
+                                repeatPassword = it
+                            },
+                            onClear = {
+                                repeatPassword = ""
+                            }
+                        )
+
                         Spacer(modifier = Modifier.weight(1f))
 
                         BasicBlackButton(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 16.dp),
+                            enabled = isButtonEnabled,
                             loading = state.isLoading,
-                            text = "Далее",
+                            text = if (password != repeatPassword) "Пароли не совпадают" else "Далее",
                             onClick = {
-                                screenModel.send(event = SignInEvent.SignIn(login = login, password = password))
+                                screenModel.send(event = SignUpEvent.SignUp(login = login, password = password))
                             }
                         )
                     }
@@ -121,8 +138,8 @@ fun SignInView(
 
 @Preview(showBackground = true)
 @Composable
-fun SignInPreview() {
-    val screenModel: SignInScreenModel by di.instance()
+fun SignUpPreview() {
+    val screenModel: SignUpScreenModel by di.instance()
 
-    SignInView(screenModel = screenModel)
+    SignUpView(screenModel = screenModel)
 }

@@ -15,7 +15,7 @@ object KtorUtils {
 
     private fun HeadersBuilder.appendHeaders() {
         val localStorage = LocalStorage.newInstance()
-        append("Device-Token", localStorage.get("deviceId") ?: "")
+        append("deviceId", localStorage.get("deviceId") ?: "")
         append("Token", localStorage.get(LocalStorage.TOKEN) ?: "")
         append("Device-Type", "android")
         append("App-Type", "driver")
