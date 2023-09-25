@@ -45,7 +45,14 @@ fun SignUpView(
     var password by remember { mutableStateOf("") }
     var repeatPassword by remember { mutableStateOf("") }
 
-    val isButtonEnabled = password == repeatPassword
+    val isButtonEnabled =
+        (password == repeatPassword) && (login.isNotBlank() && password.isNotBlank() && repeatPassword.isNotBlank())
+    val buttonText =
+        calculateButtonText(
+            login = login,
+            password = password,
+            repeatPassword = repeatPassword
+        )
 
     if (state.isSignUpSuccess == false && state.error != null)
         Toast.makeText(context, state.error.orEmpty(), Toast.LENGTH_SHORT).show()
@@ -124,7 +131,7 @@ fun SignUpView(
                                 .padding(bottom = 16.dp),
                             enabled = isButtonEnabled,
                             loading = state.isLoading,
-                            text = if (password != repeatPassword) "Пароли не совпадают" else "Далее",
+                            text = buttonText,
                             onClick = {
                                 screenModel.send(event = SignUpEvent.SignUp(login = login, password = password))
                             }
@@ -134,6 +141,16 @@ fun SignUpView(
             }
         }
     }
+}
+
+fun calculateButtonText(login: String, password: String, repeatPassword: String): String {
+    if (password.isBlank() || login.isBlank() || repeatPassword.isBlank())
+        return "Заполните все поля"
+
+    if (password != repeatPassword)
+        return "Пароли не сходятся"
+
+    return "Далее"
 }
 
 @Preview(showBackground = true)
