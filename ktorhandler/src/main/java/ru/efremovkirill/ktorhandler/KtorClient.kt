@@ -75,8 +75,9 @@ object KtorClient {
                     ignoreUnknownKeys = true
                     coerceInputValues = false
                     prettyPrint = true
-                isLenient = true
-            }) }
+                    isLenient = true
+                })
+            }
 
             install(Logging) {
                 level = LogLevel.ALL
@@ -110,9 +111,18 @@ object KtorClient {
 
     private fun getClient(): HttpClient = client
 
-    suspend fun rawGet(host: String = HOST, protocol: URLProtocol = PROTOCOL, port: Int = -1, path: String, body: Any = "", query: StringValues = StringValues.Empty, logs: Boolean): HttpResponse? {
+    suspend fun rawGet(
+        host: String = HOST,
+        protocol: URLProtocol = PROTOCOL,
+        port: Int = -1,
+        path: String,
+        body: Any = "",
+        query: StringValues = StringValues.Empty,
+        logs: Boolean
+    ): HttpResponse? {
         if (logs)
-            Log.w(TAG,
+            Log.w(
+                TAG,
                 "\n" +
                         "------------------->\n" +
                         "GET: ${protocol.name}://$host$path\n" +
@@ -121,8 +131,14 @@ object KtorClient {
             )
         return try {
             val response = getClient().get {
-                appendRequest(path = path, port = port, stringValues = query, _host = host, _protocol = protocol)
-                setBody(if(body is RefreshTokenDTO) getRefreshTokenDTOFromStorage() else body)
+                appendRequest(
+                    path = path,
+                    port = port,
+                    stringValues = query,
+                    _host = host,
+                    _protocol = protocol
+                )
+                setBody(if (body is RefreshTokenDTO) getRefreshTokenDTOFromStorage() else body)
             }
 
             if (logs)
@@ -174,27 +190,63 @@ object KtorClient {
                 exception = e,
                 unit = {
                     runBlocking {
-                        rawGet(host = host, protocol = protocol, port = port, path = path, body = body, query = query, logs = logs)
+                        rawGet(
+                            host = host,
+                            protocol = protocol,
+                            port = port,
+                            path = path,
+                            body = body,
+                            query = query,
+                            logs = logs
+                        )
                     }
                 }
             )
         }
     }
 
-    suspend inline fun <reified T> getSafely(host: String = HOST, protocol: URLProtocol = PROTOCOL, port: Int = -1, path: String, body: Any = "", stringValues: StringValues = StringValues.Empty, logs: Boolean = true): T? {
-        return try { rawGet(host = host, protocol = protocol, path = path, port = port, body = body, query = stringValues, logs = logs)?.body() } catch (e: Exception) {
-            Log.e(TAG,
+    suspend inline fun <reified T> getSafely(
+        host: String = HOST,
+        protocol: URLProtocol = PROTOCOL,
+        port: Int = -1,
+        path: String,
+        body: Any = "",
+        stringValues: StringValues = StringValues.Empty,
+        logs: Boolean = true
+    ): Response<T?> {
+        return try {
+            rawGet(
+                host = host,
+                protocol = protocol,
+                path = path,
+                port = port,
+                body = body,
+                query = stringValues,
+                logs = logs
+            )?.body() ?: Response.empty()
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
                 "\n" +
                         "<-------------------\n${protocol.name}://$host$path\n${e.javaClass}\n" +
                         e.printStackTrace()
             )
-            return null
+            return Response.empty()
         }
     }
 
-    suspend fun rawPost(host: String = HOST, protocol: URLProtocol = PROTOCOL, port: Int = -1, path: String, body: Any = "", query: StringValues = StringValues.Empty, logs: Boolean): HttpResponse? {
+    suspend fun rawPost(
+        host: String = HOST,
+        protocol: URLProtocol = PROTOCOL,
+        port: Int = -1,
+        path: String,
+        body: Any = "",
+        query: StringValues = StringValues.Empty,
+        logs: Boolean
+    ): HttpResponse? {
         if (logs)
-            Log.w(TAG,
+            Log.w(
+                TAG,
                 "\n" +
                         "------------------->\n" +
                         "POST: ${protocol.name}://$host$path\n" +
@@ -203,8 +255,14 @@ object KtorClient {
             )
         return try {
             val response = getClient().post {
-                appendRequest(path = path, port = port, stringValues = query, _host = host, _protocol = protocol)
-                setBody(if(body is RefreshTokenDTO) getRefreshTokenDTOFromStorage() else body)
+                appendRequest(
+                    path = path,
+                    port = port,
+                    stringValues = query,
+                    _host = host,
+                    _protocol = protocol
+                )
+                setBody(if (body is RefreshTokenDTO) getRefreshTokenDTOFromStorage() else body)
             }
 
             if (logs)
@@ -256,27 +314,57 @@ object KtorClient {
                 exception = e,
                 unit = {
                     runBlocking {
-                        rawPost(host = host, protocol = protocol, port = port, path = path, body = body, query = query, logs = logs)
+                        rawPost(
+                            host = host,
+                            protocol = protocol,
+                            port = port,
+                            path = path,
+                            body = body,
+                            query = query,
+                            logs = logs
+                        )
                     }
                 }
             )
         }
     }
 
-    suspend inline fun <reified T> postSafely(host: String = HOST, protocol: URLProtocol = PROTOCOL, port: Int = -1, path: String, body: Any = "", stringValues: StringValues = StringValues.Empty, logs: Boolean = true): T? {
-        return try { rawPost(host = host, protocol = protocol, path = path, port = port, body = body, query = stringValues, logs = logs)?.body() } catch (e: Exception) {
-            Log.e(TAG,
+    suspend inline fun <reified T> postSafely(
+        host: String = HOST,
+        protocol: URLProtocol = PROTOCOL,
+        port: Int = -1,
+        path: String,
+        body: Any = "",
+        stringValues: StringValues = StringValues.Empty,
+        logs: Boolean = true
+    ): Response<T?> {
+        return try {
+            rawPost(
+                host = host,
+                protocol = protocol,
+                path = path,
+                port = port,
+                body = body,
+                query = stringValues,
+                logs = logs
+            )?.body() ?: Response.empty()
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
                 "\n" +
                         "<-------------------\n${protocol.name}://$host$path\n${e.javaClass}\n" +
                         e.printStackTrace()
             )
-            return null
+            return Response.empty()
         }
     }
 
     private fun getRefreshTokenDTOFromStorage(): RefreshTokenDTO {
         val localStorage = LocalStorage.newInstance()
-        Log.e(TAG, "getRefreshTokenDTOFromStorage: ${localStorage.get(LocalStorage.REFRESH_TOKEN)}", )
+        Log.e(
+            TAG,
+            "getRefreshTokenDTOFromStorage: ${localStorage.get(LocalStorage.REFRESH_TOKEN)}",
+        )
         return RefreshTokenDTO(refreshToken = localStorage.get(LocalStorage.REFRESH_TOKEN) ?: "")
     }
 
