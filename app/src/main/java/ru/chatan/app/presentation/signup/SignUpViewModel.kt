@@ -1,20 +1,17 @@
 package ru.chatan.app.presentation.signup
 
-import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import ru.chatan.app.StateViewModel
 import ru.chatan.app.UNDEFINED_ERROR
 import ru.chatan.app.domain.models.auth.SignUpRequest
 import ru.chatan.app.domain.usecases.SaveTokenUseCase
 import ru.chatan.app.domain.usecases.SignUpUseCase
 
-class SignUpScreenModel(
+class SignUpViewModel(
     private val signUpUseCase: SignUpUseCase,
     private val saveTokenUseCase: SaveTokenUseCase
-) : StateScreenModel<SignUpState>(SignUpState.initial()) {
+) : StateViewModel<SignUpState, SignUpEvent>(SignUpState.initial()) {
 
-    fun send(event: SignUpEvent) = coroutineScope.launch(Dispatchers.IO) {
+    override fun send(event: SignUpEvent) = run {
         mutableState.emit(state.value.loading())
 
         when (event) {

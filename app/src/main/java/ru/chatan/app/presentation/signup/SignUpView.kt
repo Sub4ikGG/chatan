@@ -12,7 +12,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,19 +23,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.navigator.LocalNavigator
 import org.kodein.di.instance
 import ru.chatan.app.di.di
 import ru.chatan.app.presentation.elements.BasicBlackButton
 import ru.chatan.app.presentation.elements.BasicTextFieldView
 import ru.chatan.app.presentation.elements.BasicToolBarView
+import ru.chatan.app.presentation.signup.SignUpEvent.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpView(
-    screenModel: SignUpScreenModel
+    viewModel: SignUpViewModel
 ) {
-    val state by screenModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val navigator = LocalNavigator.current
@@ -133,7 +134,7 @@ fun SignUpView(
                             loading = state.isLoading,
                             text = buttonText,
                             onClick = {
-                                screenModel.send(event = SignUpEvent.SignUp(login = login, password = password))
+                                viewModel.send(event = SignUp(login = login, password = password))
                             }
                         )
                     }
@@ -156,7 +157,7 @@ fun calculateButtonText(login: String, password: String, repeatPassword: String)
 @Preview(showBackground = true)
 @Composable
 fun SignUpPreview() {
-    val screenModel: SignUpScreenModel by di.instance()
+    val screenModel: SignUpViewModel by di.instance()
 
-    SignUpView(screenModel = screenModel)
+    SignUpView(viewModel = screenModel)
 }

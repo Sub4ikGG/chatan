@@ -18,13 +18,13 @@ class AuthRepositoryImpl: AuthRepository {
         KtorClient.postSafely(
             path = SIGN_IN_PATH,
             body = signInRequest.toDTO()
-        ) ?: Response.empty()
+        )
 
     override suspend fun signUp(signUpRequest: SignUpRequest): Response<SignUpResponseDTO?> =
         KtorClient.postSafely(
             path = SIGN_UP_PATH,
             body = signUpRequest.toDTO()
-        ) ?: Response.empty()
+        )
 
     override suspend fun saveToken(token: String, refreshToken: String) {
         localStorage.save(LocalStorage.TOKEN, token)

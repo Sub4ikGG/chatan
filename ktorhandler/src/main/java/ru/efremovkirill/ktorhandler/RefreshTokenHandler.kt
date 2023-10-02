@@ -37,7 +37,7 @@ class RefreshTokenHandler {
                 host = KtorClient.TOKEN_REFRESH_HOST,
                 path = KtorClient.TOKEN_REFRESH_PATH,
                 body = tokens
-            ) ?: Response.empty()
+            )
 
             val tokensDTO = newTokens.data
             if (tokensDTO == null) {

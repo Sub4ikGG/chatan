@@ -70,7 +70,7 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
@@ -79,14 +79,54 @@ dependencies {
     // Kodein
     val kodeinVersion = "7.20.2"
     implementation("org.kodein.di:kodein-di:$kodeinVersion")
+//    implementation("org.kodein.di:kodein-di-generic-jvm:6.5.0")
+//    implementation("org.kodein.di:kodein-di-framework-android-x:$kodeinVersion")
 
     // Voyager
     val voyagerVersion = "1.0.0-rc06"
     implementation("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
     implementation("cafe.adriel.voyager:voyager-androidx:$voyagerVersion")
     implementation("cafe.adriel.voyager:voyager-transitions:$voyagerVersion")
-    implementation("cafe.adriel.voyager:voyager-kodein:$voyagerVersion")
+    implementation("cafe.adriel.voyager:voyager-androidx:$voyagerVersion")
+//    implementation("cafe.adriel.voyager:voyager-kodein:$voyagerVersion")
 
     // Ktor
     implementation("io.ktor:ktor-server-core-jvm:2.3.2")
+
+    // ViewModel
+    val lifecycle_version = "2.6.2"
+    val arch_version = "2.2.0"
+
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    // ViewModel utilities for Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
+    // LiveData
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+    // Lifecycles only (without ViewModel or LiveData)
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
+    // Lifecycle utilities for Compose
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version")
+
+    // Saved state module for ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version")
+
+    // alternately - if using Java8, use the following instead of lifecycle-compiler
+    implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycle_version")
+
+    // optional - helpers for implementing LifecycleOwner in a Service
+    implementation("androidx.lifecycle:lifecycle-service:$lifecycle_version")
+
+    // optional - ProcessLifecycleOwner provides a lifecycle for the whole application process
+    implementation("androidx.lifecycle:lifecycle-process:$lifecycle_version")
+
+    // optional - ReactiveStreams support for LiveData
+    implementation("androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycle_version")
+
+    // optional - Test helpers for LiveData
+    testImplementation("androidx.arch.core:core-testing:$arch_version")
+
+    // optional - Test helpers for Lifecycle runtime
+    testImplementation("androidx.lifecycle:lifecycle-runtime-testing:$lifecycle_version")
+
 }

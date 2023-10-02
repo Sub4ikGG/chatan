@@ -15,10 +15,9 @@ object KtorUtils {
 
     private fun HeadersBuilder.appendHeaders() {
         val localStorage = LocalStorage.newInstance()
-        append("deviceId", localStorage.get("deviceId") ?: "")
-        append("Token", localStorage.get(LocalStorage.TOKEN) ?: "")
-        append("Device-Type", "android")
-        append("App-Type", "driver")
+
+        append(name = "deviceId", value = localStorage.get("deviceId").orEmpty())
+        append(name = "token", value = localStorage.get(LocalStorage.TOKEN).orEmpty())
     }
 
     private fun URLBuilder.appendUrl(protocol: URLProtocol = URLProtocol.HTTPS, port: Int = -1, host: String, path: String) {

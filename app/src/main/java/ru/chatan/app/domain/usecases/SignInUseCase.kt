@@ -17,7 +17,7 @@ class SignInUseCase {
     private fun Response<SignInResponseDTO?>.map(): Response<SignInResponse?> =
         Response(
             code = this.code,
-            responseMessage = this.responseMessage,
+            responseMessage = this.message,
             data = this.data?.toModel(),
             errors = this.errors
         )

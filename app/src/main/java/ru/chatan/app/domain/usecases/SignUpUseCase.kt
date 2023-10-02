@@ -17,7 +17,7 @@ class SignUpUseCase {
     private fun Response<SignUpResponseDTO?>.map(): Response<SignUpResponse?> =
         Response(
             code = this.code,
-            responseMessage = this.responseMessage,
+            responseMessage = this.message,
             data = this.data?.toModel(),
             errors = this.errors
         )

@@ -1,22 +1,17 @@
 package ru.chatan.app.presentation.signin
 
-import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import ru.chatan.app.UNDEFINED_ERROR
+import ru.chatan.app.DATA_ERROR
+import ru.chatan.app.StateViewModel
 import ru.chatan.app.domain.models.auth.SignInRequest
 import ru.chatan.app.domain.usecases.SaveTokenUseCase
 import ru.chatan.app.domain.usecases.SignInUseCase
 
-class SignInScreenModel(
+class SignInViewModel(
     private val signInUseCase: SignInUseCase,
     private val saveTokenUseCase: SaveTokenUseCase
-): StateScreenModel<SignInState>(SignInState.initial()) {
+): StateViewModel<SignInState, SignInEvent>(SignInState.initial()) {
 
-    fun send(event: SignInEvent) = coroutineScope.launch(Dispatchers.IO) {
-        mutableState.emit(state.value.loading())
-
+    override fun send(event: SignInEvent) = run {
         when (event) {
             is SignInEvent.SignIn -> signIn(
                 login = event.login,
@@ -31,7 +26,7 @@ class SignInScreenModel(
         val response =
             signInUseCase(signInRequest = SignInRequest(name = login, password = password))
         if (response.code == 200) {
-            val data = response.data ?: return mutableState.emit(state.value.error(errorMessage = UNDEFINED_ERROR))
+            val data = response.data ?: return mutableState.emit(state.value.error(errorMessage = DATA_ERROR))
             saveToken(token = data.token, refreshToken = data.refreshToken)
 
             mutableState.emit(state.value.success())

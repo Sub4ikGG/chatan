@@ -8,13 +8,15 @@ data class Response<T>(
     @SerialName("code")
     val code: Int,
     @SerialName("message")
-    val responseMessage: String = "",
+    private val responseMessage: String = "",
     @SerialName("data")
     val data: T? = null,
     @SerialName("errors")
     val errors: List<Error>? = null
 ) {
     val message: String get() = getError().ifEmpty { responseMessage }
+
+    fun isSuccess() = code == 200
 
     fun getError() = errors?.joinToString(separator = "\n") { it.message } ?: responseMessage
 
