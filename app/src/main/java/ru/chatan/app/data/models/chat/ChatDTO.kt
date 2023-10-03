@@ -5,11 +5,11 @@ import ru.chatan.app.domain.models.chat.Chat
 
 @Serializable
 data class ChatDTO(
-    val id: Long,
+    val chatId: Long,
     val name: String
 ) {
     fun toModel() = Chat(
-        id = id,
+        chatId = chatId,
         name = name
     )
 }

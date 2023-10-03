@@ -29,18 +29,23 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.chatan.app.R
-import ru.chatan.app.domain.models.messages.UserMessage
+import ru.chatan.app.domain.models.chat.Chat
+import ru.chatan.app.presentation.elements.basicClickable
 import ru.chatan.app.presentation.theme.ChatanTheme
 
 @Composable
-fun MessageView(
-    userMessage: UserMessage
+fun ChatItemView(
+    chat: Chat,
+    click: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Max)
             .background(Color.White)
+            .basicClickable {
+                click()
+            }
     ) {
         Row(
             modifier = Modifier
@@ -63,12 +68,12 @@ fun MessageView(
                     .weight(1f)
             ) {
                 Text(
-                    text = userMessage.name,
+                    text = chat.name,
                     color = Color.Black,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = userMessage.message,
+                    text = "Последнее сообщение",
                     color = Color.Black,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -76,7 +81,7 @@ fun MessageView(
             }
 
             Text(
-                text = userMessage.date,
+                text = "",
                 color = Color.Gray
             )
 
@@ -106,13 +111,11 @@ fun MessageView(
 @Composable
 fun MessageViewPreview() {
     ChatanTheme {
-        val userMessage = UserMessage(
-            id = 0,
-            name = "Alan Walker",
-            message = "Hello world!",
-            date = "now"
+        val chat = Chat(
+            chatId = 0,
+            name = "CHATAN! Official"
         )
 
-        MessageView(userMessage = userMessage)
+        ChatItemView(chat = chat, click = {})
     }
 }

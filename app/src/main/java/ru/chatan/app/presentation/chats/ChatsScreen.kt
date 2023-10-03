@@ -2,16 +2,19 @@ package ru.chatan.app.presentation.chats
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.androidx.AndroidScreen
+import org.kodein.di.instance
+import ru.chatan.app.di.di
 
-class ChatsScreen : Screen {
+class ChatsScreen : AndroidScreen() {
 
     @Composable
     override fun Content() {
-        val screenModel = viewModel<ChatsViewModel>()
+        val chatsViewModel: ChatsViewModel by di.instance()
+        val viewModel = viewModel { chatsViewModel }
 
         ChatsView(
-            screenModel = screenModel
+            viewModel = viewModel
         )
     }
 

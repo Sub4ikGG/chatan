@@ -1,5 +1,6 @@
 package ru.chatan.app.presentation.chats
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,69 +12,58 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.kodein.di.instance
 import ru.chatan.app.di.di
-import ru.chatan.app.domain.models.messages.UserMessage
+import ru.chatan.app.presentation.elements.ChatBottomBar
 import ru.chatan.app.presentation.elements.ChatsToolBarView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatsView(
-    screenModel: ChatsViewModel
+    viewModel: ChatsViewModel
 ) {
-    val state = screenModel.state.collectAsStateWithLifecycle()
-
-    val sampleMessages = listOf(
-        UserMessage(
-            id = 0,
-            name = "Alan Walker",
-            message = "Hello world!",
-            date = "now"
-        ),
-        UserMessage(
-            id = 0,
-            name = "Alan Walker",
-            message = "Hello world!",
-            date = "now"
-        ),
-        UserMessage(
-            id = 0,
-            name = "Alan Walker",
-            message = "Hello world!",
-            date = "now"
-        ),
-        UserMessage(
-            id = 0,
-            name = "Alan Walker",
-            message = "Hello world!",
-            date = "now"
-        )
-    )
+    val context = LocalContext.current
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold { contentPadding ->
         Box(
             modifier = Modifier
-                .padding(contentPadding)
+                .padding(top = contentPadding.calculateTopPadding())
                 .background(Color.White)
         ) {
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                ChatsToolBarView(text = "Чаты")
+                ChatsToolBarView(
+                    text = "Чаты"
+                )
 
                 LazyColumn(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .weight(1f),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(sampleMessages) { userMessage ->
-                        MessageView(userMessage = userMessage)
+                    items(state.chats) { chat ->
+                        ChatItemView(chat = chat, click = {
+                            Toast.makeText(context, "${chat.name}", Toast.LENGTH_SHORT).show()
+                        })
                     }
                 }
+
+                ChatBottomBar(
+                    mailClick = {  },
+                    addChatClick = {  },
+                    profileClick = {  },
+                    paddingBottom = contentPadding.calculateBottomPadding()
+                )
             }
         }
     }
@@ -84,5 +74,5 @@ fun ChatsView(
 fun ChatsViewPreview() {
     val screenModel: ChatsViewModel by di.instance()
 
-    ChatsView(screenModel = screenModel)
+    ChatsView(viewModel = screenModel)
 }

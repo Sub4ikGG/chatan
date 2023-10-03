@@ -1,5 +1,7 @@
 package ru.chatan.app.data.repository
 
+import ru.chatan.app.data.models.auth.SignInAutoRequestDTO
+import ru.chatan.app.data.models.auth.SignInAutoResponseDTO
 import ru.chatan.app.data.models.auth.SignInResponseDTO
 import ru.chatan.app.data.models.auth.SignUpResponseDTO
 import ru.chatan.app.domain.models.auth.SignInRequest
@@ -26,6 +28,14 @@ class AuthRepositoryImpl: AuthRepository {
             body = signUpRequest.toDTO()
         )
 
+    override suspend fun signInAuto(): Response<SignInAutoResponseDTO?> {
+        val refreshToken = localStorage.get(key = LocalStorage.REFRESH_TOKEN).orEmpty()
+        return KtorClient.postSafely(
+            path = SIGN_IN_AUTO_PATH,
+            body = SignInAutoRequestDTO(refreshToken = refreshToken)
+        )
+    }
+
     override suspend fun saveToken(token: String, refreshToken: String) {
         localStorage.save(LocalStorage.TOKEN, token)
         localStorage.save(LocalStorage.REFRESH_TOKEN, refreshToken)
@@ -33,6 +43,7 @@ class AuthRepositoryImpl: AuthRepository {
 
     private companion object {
         const val SIGN_IN_PATH = "/sign-in"
+        const val SIGN_IN_AUTO_PATH = "/sign-in-auto"
         const val SIGN_UP_PATH = "/sign-up"
     }
 }

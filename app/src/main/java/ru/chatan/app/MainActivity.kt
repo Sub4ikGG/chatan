@@ -9,8 +9,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
+import ru.chatan.app.presentation.start.StartScreen
 import ru.chatan.app.presentation.theme.ChatanTheme
-import ru.chatan.app.presentation.welcome.WelcomeScreen
 import ru.chatan.app.presentation.welcome.WelcomeView
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             ChatanTheme {
-                Navigator(WelcomeScreen()) {
+                Navigator(StartScreen()) {
                     SlideTransition(it)
                 }
             }

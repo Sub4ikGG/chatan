@@ -7,6 +7,10 @@ class ChatsViewModel(
     private val getChatsUseCase: GetChatsUseCase
 ): StateViewModel<ChatsState, ChatsEvent>(ChatsState.initial()) {
 
+    init {
+        send(ChatsEvent.GetChats)
+    }
+
     override fun send(event: ChatsEvent) = run {
         when (event) {
             ChatsEvent.GetChats -> getChats()

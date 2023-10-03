@@ -27,6 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.navigator.LocalNavigator
 import org.kodein.di.instance
 import ru.chatan.app.di.di
+import ru.chatan.app.presentation.chats.ChatsScreen
 import ru.chatan.app.presentation.elements.BasicBlackButton
 import ru.chatan.app.presentation.elements.BasicTextFieldView
 import ru.chatan.app.presentation.elements.BasicToolBarView
@@ -47,7 +48,7 @@ fun SignInView(
     if (state.isSignInSuccess == false && state.error != null)
         Toast.makeText(context, state.error.orEmpty(), Toast.LENGTH_SHORT).show()
     else if (state.isSignInSuccess == true)
-        navigator?.pop()
+        navigator?.push(ChatsScreen())
 
     Scaffold { contentPadding ->
 

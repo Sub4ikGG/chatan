@@ -24,7 +24,6 @@ import io.ktor.util.StringValues
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
 import ru.efremovkirill.ktorhandler.KtorUtils.appendRequest
 import ru.efremovkirill.ktorhandler.tokens.RefreshTokenDTO
@@ -38,7 +37,7 @@ object KtorClient {
 
     private val tokenRefreshMutex = Mutex()
     private val serviceUnavailableMap = mutableMapOf<String, Int>()
-    private const val serviceUnavailableMaxAttempt = 5
+    private const val serviceUnavailableMaxAttempt = 3
 
     private val refreshTokenHandler = RefreshTokenHandler()
 
@@ -70,14 +69,12 @@ object KtorClient {
                 requestTimeoutMillis = REQUEST_TIMEOUT
             }
 
-            install(ContentNegotiation) {
-                json(Json {
-                    ignoreUnknownKeys = true
-                    coerceInputValues = false
-                    prettyPrint = true
-                    isLenient = true
-                })
-            }
+            install(ContentNegotiation) { json(Json {
+                ignoreUnknownKeys = true
+                coerceInputValues = false
+                prettyPrint = true
+                isLenient = true
+            }) }
 
             install(Logging) {
                 level = LogLevel.ALL
@@ -111,18 +108,9 @@ object KtorClient {
 
     private fun getClient(): HttpClient = client
 
-    suspend fun rawGet(
-        host: String = HOST,
-        protocol: URLProtocol = PROTOCOL,
-        port: Int = -1,
-        path: String,
-        body: Any = "",
-        query: StringValues = StringValues.Empty,
-        logs: Boolean
-    ): HttpResponse? {
+    suspend fun rawGet(host: String = HOST, protocol: URLProtocol = PROTOCOL, port: Int = -1, path: String, body: Any = "", query: StringValues = StringValues.Empty, logs: Boolean): HttpResponse? {
         if (logs)
-            Log.w(
-                TAG,
+            Log.w(TAG,
                 "\n" +
                         "------------------->\n" +
                         "GET: ${protocol.name}://$host$path\n" +
@@ -131,25 +119,18 @@ object KtorClient {
             )
         return try {
             val response = getClient().get {
-                appendRequest(
-                    path = path,
-                    port = port,
-                    stringValues = query,
-                    _host = host,
-                    _protocol = protocol
-                )
-                setBody(if (body is RefreshTokenDTO) getRefreshTokenDTOFromStorage() else body)
+                appendRequest(path = path, port = port, stringValues = query, _host = host, _protocol = protocol)
+                setBody(if(body is RefreshTokenDTO) getRefreshTokenDTOFromStorage() else body)
             }
 
             if (logs)
-                Log.w(
-                    TAG,
+                Log.w(TAG,
                     "<------------------- ${protocol.name}://$host$path ${response.status}\n" +
                             "BODY: ${response.bodyAsText()}\n" +
                             "HEADER: ${response.headers}"
                 )
 
-            if (response.status == HttpStatusCode.Unauthorized)
+            if(response.status == HttpStatusCode.Unauthorized)
                 throw UserNotAuthenticatedException()
 
             if (response.status == HttpStatusCode.ServiceUnavailable) {
@@ -158,17 +139,9 @@ object KtorClient {
                 var attempt = serviceUnavailableMap[path] ?: 0
                 if (attempt < serviceUnavailableMaxAttempt) {
                     attempt++
-                    delay(3500L)
+                    delay(2500L)
                     serviceUnavailableMap[path] = attempt
-                    return rawGet(
-                        host = host,
-                        protocol = protocol,
-                        port = port,
-                        path = path,
-                        body = body,
-                        query = query,
-                        logs = logs
-                    )
+                    return rawGet(host = host, protocol = protocol, port = port, path = path, body = body, query = query, logs = logs)
                 } else throw UnavailableException("")
             } else serviceUnavailableMap[path] = 0
 
@@ -179,8 +152,7 @@ object KtorClient {
             if (e is UnavailableException)
                 serviceStatusListener?.onServiceStatusChanged(status = false)
 
-            Log.e(
-                TAG,
+            Log.e(TAG,
                 "\n" +
                         "<-------------------\n${protocol.name}://$host$path\n${e.javaClass}\n" +
                         e.localizedMessage
@@ -190,15 +162,7 @@ object KtorClient {
                 exception = e,
                 unit = {
                     runBlocking {
-                        rawGet(
-                            host = host,
-                            protocol = protocol,
-                            port = port,
-                            path = path,
-                            body = body,
-                            query = query,
-                            logs = logs
-                        )
+                        rawGet(host = host, protocol = protocol, port = port, path = path, body = body, query = query, logs = logs)
                     }
                 }
             )
@@ -235,18 +199,9 @@ object KtorClient {
         }
     }
 
-    suspend fun rawPost(
-        host: String = HOST,
-        protocol: URLProtocol = PROTOCOL,
-        port: Int = -1,
-        path: String,
-        body: Any = "",
-        query: StringValues = StringValues.Empty,
-        logs: Boolean
-    ): HttpResponse? {
+    suspend fun rawPost(host: String = HOST, protocol: URLProtocol = PROTOCOL, port: Int = -1, path: String, body: Any = "", query: StringValues = StringValues.Empty, logs: Boolean): HttpResponse? {
         if (logs)
-            Log.w(
-                TAG,
+            Log.w(TAG,
                 "\n" +
                         "------------------->\n" +
                         "POST: ${protocol.name}://$host$path\n" +
@@ -255,25 +210,18 @@ object KtorClient {
             )
         return try {
             val response = getClient().post {
-                appendRequest(
-                    path = path,
-                    port = port,
-                    stringValues = query,
-                    _host = host,
-                    _protocol = protocol
-                )
-                setBody(if (body is RefreshTokenDTO) getRefreshTokenDTOFromStorage() else body)
+                appendRequest(path = path, port = port, stringValues = query, _host = host, _protocol = protocol)
+                setBody(if(body is RefreshTokenDTO) getRefreshTokenDTOFromStorage() else body)
             }
 
             if (logs)
-                Log.w(
-                    TAG,
+                Log.w(TAG,
                     "<------------------- ${protocol.name}://$host$path ${response.status}\n" +
                             "BODY: ${response.bodyAsText()}\n" +
                             "HEADER: ${response.headers}"
                 )
 
-            if (response.status == HttpStatusCode.Unauthorized)
+            if(response.status == HttpStatusCode.Unauthorized)
                 throw UserNotAuthenticatedException()
 
             if (response.status == HttpStatusCode.ServiceUnavailable) {
@@ -284,15 +232,7 @@ object KtorClient {
                     attempt++
                     delay(2000L)
                     serviceUnavailableMap[path] = attempt
-                    return rawPost(
-                        host = host,
-                        protocol = protocol,
-                        port = port,
-                        path = path,
-                        body = body,
-                        query = query,
-                        logs = logs
-                    )
+                    return rawPost(host = host, protocol = protocol, port = port, path = path, body = body, query = query, logs = logs)
                 } else throw UnavailableException("")
             } else serviceUnavailableMap[path] = 0
 
@@ -303,8 +243,7 @@ object KtorClient {
             if (e is UnavailableException)
                 serviceStatusListener?.onServiceStatusChanged(status = false)
 
-            Log.e(
-                TAG,
+            Log.e(TAG,
                 "\n" +
                         "<-------------------\n${protocol.name}://$host$path\n${e.javaClass}\n" +
                         e.localizedMessage
@@ -314,15 +253,7 @@ object KtorClient {
                 exception = e,
                 unit = {
                     runBlocking {
-                        rawPost(
-                            host = host,
-                            protocol = protocol,
-                            port = port,
-                            path = path,
-                            body = body,
-                            query = query,
-                            logs = logs
-                        )
+                        rawPost(host = host, protocol = protocol, port = port, path = path, body = body, query = query, logs = logs)
                     }
                 }
             )
@@ -361,10 +292,7 @@ object KtorClient {
 
     private fun getRefreshTokenDTOFromStorage(): RefreshTokenDTO {
         val localStorage = LocalStorage.newInstance()
-        Log.e(
-            TAG,
-            "getRefreshTokenDTOFromStorage: ${localStorage.get(LocalStorage.REFRESH_TOKEN)}",
-        )
+        Log.e(TAG, "getRefreshTokenDTOFromStorage: ${localStorage.get(LocalStorage.REFRESH_TOKEN)}", )
         return RefreshTokenDTO(refreshToken = localStorage.get(LocalStorage.REFRESH_TOKEN) ?: "")
     }
 
@@ -386,20 +314,24 @@ object KtorClient {
     }
 
     private suspend fun updateTokens(): Boolean {
-        var detectedIsTokensUpdating = false
-        while (refreshTokenHandler.isTokensUpdating()) {
-            detectedIsTokensUpdating = true
-            delay(10L)
-        }
-        tokenRefreshMutex.withLock {
-//            while (refreshTokenHandler.isTokensUpdating()) {
-//                detectedIsTokensUpdating = true
-//                delay(10L)
-//            }
 
-            return if (detectedIsTokensUpdating && refreshTokenHandler.wasPreviousRequestSuccess())
-                true
-            else refreshTokenHandler.refreshTokens()
+        // Закрываем mutex
+        val lockResult = tokenRefreshMutex.tryLock()
+        return if (lockResult) { // Если удалось закрыть - обновляем токены
+            try {
+                refreshTokenHandler.refreshTokens()
+            } finally {
+
+                // Открываем mutex
+                tokenRefreshMutex.unlock()
+            }
+        } else {
+
+            // Ждем когда mutex откроется
+            while (tokenRefreshMutex.isLocked) delay(100L)
+
+            // Возвращаем true, значит обновление токенов завершилось
+            true
         }
     }
 

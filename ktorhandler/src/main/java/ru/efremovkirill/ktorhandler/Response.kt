@@ -3,6 +3,9 @@ package ru.efremovkirill.ktorhandler
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+private const val UNDEFINED_ERROR = "Неизвестная ошибка"
+private const val TOKEN_ERROR = "Неверный токен авторизации"
+
 @Serializable
 data class Response<T>(
     @SerialName("code")
@@ -14,7 +17,7 @@ data class Response<T>(
     @SerialName("errors")
     val errors: List<Error>? = null
 ) {
-    val message: String get() = getError().ifEmpty { responseMessage }
+    val message: String get() = getError().ifEmpty { responseMessage }.ifEmpty { if (code == 401) TOKEN_ERROR else UNDEFINED_ERROR }
 
     fun isSuccess() = code == 200
 

@@ -25,12 +25,13 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun ChatsToolBarView(
+    modifier: Modifier = Modifier,
     text: String,
     backButtonVisible: Boolean = false,
     onBackPressed: () -> Unit = {}
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
     ) {
         Column {

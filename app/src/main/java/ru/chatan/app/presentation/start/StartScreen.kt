@@ -1,4 +1,4 @@
-package ru.chatan.app.presentation.signup
+package ru.chatan.app.presentation.start
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -6,14 +6,14 @@ import cafe.adriel.voyager.androidx.AndroidScreen
 import org.kodein.di.instance
 import ru.chatan.app.di.di
 
-class SignUpScreen: AndroidScreen() {
+class StartScreen : AndroidScreen() {
 
     @Composable
     override fun Content() {
-        val signUpViewModel: SignUpViewModel by di.instance()
-        val viewModel = viewModel { signUpViewModel }
+        val startViewModel: StartViewModel by di.instance()
+        val viewModel = viewModel { startViewModel }
 
-        SignUpView(
+        StartView(
             viewModel = viewModel
         )
     }
