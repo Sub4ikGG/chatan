@@ -9,6 +9,7 @@ import io.ktor.websocket.close
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
@@ -49,8 +50,9 @@ class ChatManager {
                         session = this
                         onChatManagerListener?.onInitialized()
 
+                        receiveMessages()
                         sendAccessData(chatId = chatId).join()
-                        receiveMessages().join()
+                        while (scope.isActive) delay(10L)
                     }
             }
         } catch (e: Exception) {
@@ -126,6 +128,7 @@ class ChatManager {
         scope.cancel()
         session = null
         onChatManagerListener = null
+        mutableMessagesFlow.emit(emptyList())
     }
 
     interface OnChatManagerListener {

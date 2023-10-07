@@ -2,6 +2,7 @@ package ru.chatan.app.di
 
 import org.kodein.di.DI
 import org.kodein.di.bindProvider
+import org.kodein.di.bindSingleton
 import org.kodein.di.instance
 import ru.chatan.app.data.repository.AuthRepositoryImpl
 import ru.chatan.app.data.repository.ChatsRepositoryImpl
@@ -30,7 +31,7 @@ import ru.chatan.app.presentation.start.StartViewModel
 import ru.chatan.app.presentation.start.StartViewModelFactory
 
 val featuresDi = DI.Module("featuresDi") {
-    bindProvider { ChatManager() }
+    bindSingleton { ChatManager() }
 }
 
 val repositoryDi = DI.Module("repositoryDi") {
