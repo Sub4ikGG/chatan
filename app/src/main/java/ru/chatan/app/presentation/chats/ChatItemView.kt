@@ -109,7 +109,7 @@ fun ChatItemView(
 
 @Preview(showBackground = true)
 @Composable
-fun MessageViewPreview() {
+private fun ChatItemViewPreview() {
     ChatanTheme {
         val chat = Chat(
             chatId = 0,

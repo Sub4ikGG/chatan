@@ -1,6 +1,5 @@
 package ru.chatan.app.data.repository
 
-import ru.chatan.app.data.models.auth.SignInAutoRequestDTO
 import ru.chatan.app.data.models.auth.SignInAutoResponseDTO
 import ru.chatan.app.data.models.auth.SignInResponseDTO
 import ru.chatan.app.data.models.auth.SignUpResponseDTO
@@ -9,6 +8,7 @@ import ru.chatan.app.domain.models.auth.SignUpRequest
 import ru.chatan.app.domain.repository.AuthRepository
 import ru.efremovkirill.ktorhandler.KtorClient
 import ru.efremovkirill.ktorhandler.Response
+import ru.efremovkirill.ktorhandler.tokens.RefreshTokenDTO
 import ru.efremovkirill.localstorage.LocalStorage
 
 class AuthRepositoryImpl: AuthRepository {
@@ -32,7 +32,7 @@ class AuthRepositoryImpl: AuthRepository {
         val refreshToken = localStorage.get(key = LocalStorage.REFRESH_TOKEN).orEmpty()
         return KtorClient.postSafely(
             path = SIGN_IN_AUTO_PATH,
-            body = SignInAutoRequestDTO(refreshToken = refreshToken)
+            body = RefreshTokenDTO(refreshToken = refreshToken)
         )
     }
 

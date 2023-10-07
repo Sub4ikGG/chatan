@@ -79,8 +79,6 @@ dependencies {
     // Kodein
     val kodeinVersion = "7.20.2"
     implementation("org.kodein.di:kodein-di:$kodeinVersion")
-//    implementation("org.kodein.di:kodein-di-generic-jvm:6.5.0")
-//    implementation("org.kodein.di:kodein-di-framework-android-x:$kodeinVersion")
 
     // Voyager
     val voyagerVersion = "1.0.0-rc06"
@@ -88,10 +86,15 @@ dependencies {
     implementation("cafe.adriel.voyager:voyager-androidx:$voyagerVersion")
     implementation("cafe.adriel.voyager:voyager-transitions:$voyagerVersion")
     implementation("cafe.adriel.voyager:voyager-androidx:$voyagerVersion")
-//    implementation("cafe.adriel.voyager:voyager-kodein:$voyagerVersion")
 
-    // Ktor
-    implementation("io.ktor:ktor-server-core-jvm:2.3.2")
+    // Ktor-client
+    implementation("io.ktor:ktor-client-core:1.6.2")
+    implementation("io.ktor:ktor-client-cio:1.6.2")
+    implementation("io.ktor:ktor-client-serialization:1.6.2")
+    implementation("io.ktor:ktor-client-websockets:1.6.2")
+    implementation("io.ktor:ktor-client-android:1.5.4")
+    implementation("io.ktor:ktor-client-serialization-jvm:1.6.2")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.2")
 
     // ViewModel
     val lifecycle_version = "2.6.2"

@@ -1,6 +1,5 @@
 package ru.chatan.app.presentation.elements
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -19,7 +18,7 @@ fun ChatBottomBarItem(
     Icon(
         modifier = modifier
             .height(32.dp)
-            .clickable {
+            .basicClickable {
                 click()
             },
         imageVector = imageVector,

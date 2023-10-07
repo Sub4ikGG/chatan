@@ -1,6 +1,5 @@
 package ru.chatan.app.presentation.chats
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,8 +18,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cafe.adriel.voyager.navigator.LocalNavigator
 import org.kodein.di.instance
 import ru.chatan.app.di.di
+import ru.chatan.app.presentation.chat.ChatScreen
 import ru.chatan.app.presentation.elements.ChatBottomBar
 import ru.chatan.app.presentation.elements.ChatsToolBarView
 
@@ -29,6 +30,7 @@ import ru.chatan.app.presentation.elements.ChatsToolBarView
 fun ChatsView(
     viewModel: ChatsViewModel
 ) {
+    val navigator = LocalNavigator.current
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -53,7 +55,7 @@ fun ChatsView(
                 ) {
                     items(state.chats) { chat ->
                         ChatItemView(chat = chat, click = {
-                            Toast.makeText(context, "${chat.name}", Toast.LENGTH_SHORT).show()
+                            navigator?.push(ChatScreen(chat = chat))
                         })
                     }
                 }

@@ -5,6 +5,7 @@ import ru.chatan.app.StateViewModel
 import ru.chatan.app.domain.models.auth.SignInRequest
 import ru.chatan.app.domain.usecases.SaveTokenUseCase
 import ru.chatan.app.domain.usecases.SignInUseCase
+import ru.chatan.app.presentation.User
 
 class SignInViewModel(
     private val signInUseCase: SignInUseCase,
@@ -28,6 +29,8 @@ class SignInViewModel(
         if (response.code == 200) {
             val data = response.data ?: return mutableState.emit(state.value.error(errorMessage = DATA_ERROR))
             saveToken(token = data.token, refreshToken = data.refreshToken)
+
+            User.name = data.name
 
             mutableState.emit(state.value.success())
         }

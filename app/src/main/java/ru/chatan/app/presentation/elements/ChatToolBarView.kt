@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,11 +24,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import ru.chatan.app.R
 
 @Composable
@@ -38,9 +36,13 @@ fun ChatToolBarView(
 ) {
     Column(
         modifier = modifier.fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 16.dp)
     ) {
-        Box(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max)) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Max)
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+        ) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.CenterStart
@@ -54,17 +56,20 @@ fun ChatToolBarView(
                 )
             }
 
-            Box(modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
                 Text(
                     text = text,
-                    style = TextStyle(fontSize = 24.sp),
-                    fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
 
-            Box(modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.CenterEnd) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.CenterEnd
+            ) {
                 Image(
                     modifier = Modifier
                         .size(38.dp)
@@ -76,11 +81,12 @@ fun ChatToolBarView(
             }
         }
 
-        Spacer(modifier = Modifier
-            .padding(top = 4.dp, start = 16.dp)
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(Color(0xFFF6F4F4))
+        Spacer(
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Color(0xFFF6F4F4))
         )
     }
 }

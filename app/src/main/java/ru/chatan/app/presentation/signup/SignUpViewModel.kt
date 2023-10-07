@@ -5,6 +5,7 @@ import ru.chatan.app.UNDEFINED_ERROR
 import ru.chatan.app.domain.models.auth.SignUpRequest
 import ru.chatan.app.domain.usecases.SaveTokenUseCase
 import ru.chatan.app.domain.usecases.SignUpUseCase
+import ru.chatan.app.presentation.User
 
 class SignUpViewModel(
     private val signUpUseCase: SignUpUseCase,
@@ -27,6 +28,8 @@ class SignUpViewModel(
         if (response.code == 200) {
             val data = response.data ?: return mutableState.emit(state.value.error(errorMessage = UNDEFINED_ERROR))
             saveToken(token = data.token, refreshToken = data.refreshToken)
+
+            User.name = data.name
 
             mutableState.emit(state.value.success())
         }
