@@ -14,6 +14,8 @@ abstract class StateViewModel <S, E> (initial: S) : ViewModel() {
     protected val mutableState: MutableStateFlow<S> = MutableStateFlow(initial)
     val state = mutableState.asStateFlow()
 
+    fun getStateValue() = state.value
+
     fun run(block: suspend CoroutineScope.() -> Unit) = viewModelScope.launch(Dispatchers.IO) {
         block()
     }

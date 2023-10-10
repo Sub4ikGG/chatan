@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.navigator.LocalNavigator
 import org.kodein.di.instance
 import ru.chatan.app.di.di
+import ru.chatan.app.presentation.chats.ChatsScreen
 import ru.chatan.app.presentation.elements.BasicBlackButton
 import ru.chatan.app.presentation.elements.BasicTextFieldView
 import ru.chatan.app.presentation.elements.BasicToolBarView
@@ -49,16 +51,14 @@ fun SignUpView(
     val isButtonEnabled =
         (password == repeatPassword) && (login.isNotBlank() && password.isNotBlank() && repeatPassword.isNotBlank())
     val buttonText =
-        calculateButtonText(
-            login = login,
-            password = password,
-            repeatPassword = repeatPassword
-        )
+        calculateButtonText(login = login, password = password, repeatPassword = repeatPassword)
 
-    if (state.isSignUpSuccess == false && state.error != null)
-        Toast.makeText(context, state.error.orEmpty(), Toast.LENGTH_SHORT).show()
-    else if (state.isSignUpSuccess == true)
-        navigator?.pop()
+    LaunchedEffect(key1 = state) {
+        if (state.error != null)
+            Toast.makeText(context, state.error.orEmpty(), Toast.LENGTH_SHORT).show()
+        else if (state.isSignUpSuccess == true)
+            navigator?.push(ChatsScreen())
+    }
 
     Scaffold { contentPadding ->
 

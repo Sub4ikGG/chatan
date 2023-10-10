@@ -6,19 +6,19 @@ import ru.chatan.app.domain.models.message.ChatMessage
 
 val sampleChats = listOf(
     Chat(
-        chatId = 0,
+        id = 0,
         name = "Alan Walker",
     ),
     Chat(
-        chatId = 0,
+        id = 0,
         name = "Alan Walker",
     ),
     Chat(
-        chatId = 0,
+        id = 0,
         name = "Alan Walker",
     ),
     Chat(
-        chatId = 0,
+        id = 0,
         name = "Alan Walker",
     )
 )

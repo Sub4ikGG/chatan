@@ -45,6 +45,7 @@ fun StartView(viewModel: StartViewModel) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .background(Color.White)
                 .padding(contentPadding),
             contentAlignment = Alignment.Center
         ) {

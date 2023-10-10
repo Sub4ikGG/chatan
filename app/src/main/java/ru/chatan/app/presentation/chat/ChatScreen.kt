@@ -20,7 +20,7 @@ class ChatScreen(
 
         LifecycleEffect(
             onStarted = {
-                viewModel.send(ChatEvent.GetMessages(chatId = chat.chatId))
+                viewModel.send(ChatEvent.GetMessages(chatId = chat.id))
             }
         )
 

@@ -37,6 +37,7 @@ import ru.chatan.app.presentation.theme.ChatanTheme
 @Composable
 fun WelcomeView() {
     val navigator = LocalNavigator.current
+
     Scaffold(modifier = Modifier.fillMaxSize()) { contentPadding ->
         Box(
             modifier = Modifier

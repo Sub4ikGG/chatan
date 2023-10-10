@@ -37,22 +37,25 @@ fun ChatBottomBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(10.dp)
         ) {
             ChatBottomBarItem(
                 modifier = Modifier.weight(1f),
+                text = "Сообщения",
                 imageVector = Icons.Default.MailOutline,
                 click = mailClick
             )
 
             ChatBottomBarItem(
                 modifier = Modifier.weight(1f),
+                text = "Новое",
                 imageVector = Icons.Default.Add,
                 click = addChatClick
             )
 
             ChatBottomBarItem(
                 modifier = Modifier.weight(1f),
+                text = "Профиль",
                 imageVector = Icons.Default.Person,
                 click = profileClick
             )

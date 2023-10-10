@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
+import ru.chatan.app.presentation.chats.ChatsScreen
 import ru.chatan.app.presentation.start.StartScreen
 import ru.chatan.app.presentation.theme.ChatanTheme
 import ru.chatan.app.presentation.welcome.WelcomeScreen
@@ -28,7 +29,7 @@ import ru.chatan.app.presentation.welcome.WelcomeView
 @OptIn(ExperimentalAnimationApi::class)
 class MainActivity : ComponentActivity() {
 
-    private var networkManager: NetworkManager? = null
+    private var networkManager: NetworkManager? = NetworkManager()
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +54,7 @@ class MainActivity : ComponentActivity() {
                         screen = StartScreen(),
                         onBackPressed = { currentScreen ->
                             when (currentScreen) {
-                                is WelcomeScreen -> {
+                                is WelcomeScreen, is ChatsScreen -> {
                                     finish()
                                     false
                                 }
@@ -74,7 +75,7 @@ class MainActivity : ComponentActivity() {
         snackbarHostState: SnackbarHostState,
         network: Boolean?
     ) {
-        LaunchedEffect(key1 = snackbarHostState) {
+        LaunchedEffect(key1 = network) {
             if (network == false)
                 snackbarHostState.showSnackbar(
                     message = getString(R.string.network_unavailable),

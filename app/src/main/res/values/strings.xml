@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CHATAN!</string>
+    <string name="network_unavailable">Network is unavailable</string>
 </resources>

@@ -41,19 +41,31 @@ class ChatManager {
     fun initialize(
         chatId: Long
     ) {
-        Log.d(TAG, "initialize")
         try {
             scope = CoroutineScope(Dispatchers.IO)
             scope.launch {
-                KtorClient.getWebSocketClient()
-                    .webSocket(urlString = WS_URL) {
-                        session = this
-                        onChatManagerListener?.onInitialized()
+                try {
+                    KtorClient.getWebSocketClient()
+                        .webSocket(urlString = WS_URL) {
+                            Log.d(TAG, "initialize")
+                            session = this
+                            onChatManagerListener?.onInitialized()
 
-                        receiveMessages()
-                        sendAccessData(chatId = chatId).join()
-                        while (scope.isActive) delay(10L)
+                            receiveMessages()
+                            sendAccessData(chatId = chatId).join()
+                            while (scope.isActive) delay(10L)
+                        }
+                }
+                catch (e: Exception) {
+                    onChatManagerListener?.onError(error = e.localizedMessage ?: UNDEFINED_ERROR)
+                    Log.e(TAG, "scope init error: ${e.localizedMessage}")
+
+                    if (scope.isActive) {
+                        delay(2000L)
+                        initialize(chatId = chatId)
                     }
+                    else onDispose()
+                }
             }
         } catch (e: Exception) {
             Log.e(TAG, "init error: ${e.localizedMessage}")

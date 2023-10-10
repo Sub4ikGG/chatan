@@ -22,6 +22,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import org.kodein.di.instance
 import ru.chatan.app.di.di
 import ru.chatan.app.presentation.chat.ChatScreen
+import ru.chatan.app.presentation.connectchat.ConnectChatScreen
 import ru.chatan.app.presentation.elements.ChatBottomBar
 import ru.chatan.app.presentation.elements.ChatsToolBarView
 
@@ -37,8 +38,8 @@ fun ChatsView(
     Scaffold { contentPadding ->
         Box(
             modifier = Modifier
-                .padding(top = contentPadding.calculateTopPadding())
                 .background(Color.White)
+                .padding(top = contentPadding.calculateTopPadding())
         ) {
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -62,7 +63,9 @@ fun ChatsView(
 
                 ChatBottomBar(
                     mailClick = {  },
-                    addChatClick = {  },
+                    addChatClick = {
+                        navigator?.push(ConnectChatScreen())
+                    },
                     profileClick = {  },
                     paddingBottom = contentPadding.calculateBottomPadding()
                 )

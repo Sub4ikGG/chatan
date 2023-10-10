@@ -112,7 +112,7 @@ fun ChatItemView(
 private fun ChatItemViewPreview() {
     ChatanTheme {
         val chat = Chat(
-            chatId = 0,
+            id = 0,
             name = "CHATAN! Official"
         )
 

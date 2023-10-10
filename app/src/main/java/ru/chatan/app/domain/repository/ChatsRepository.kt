@@ -6,5 +6,6 @@ import ru.efremovkirill.ktorhandler.Response
 interface ChatsRepository {
 
     suspend fun getChats(): Response<List<ChatDTO>?>
+    suspend fun connectChat(code: String): Response<ChatDTO?>
 
 }

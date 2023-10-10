@@ -22,13 +22,13 @@ class NetworkManager {
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
 
-            networkState = false
+            networkState = true
         }
 
         override fun onLost(network: Network) {
             super.onLost(network)
 
-            networkState = true
+            networkState = false
         }
     }
 

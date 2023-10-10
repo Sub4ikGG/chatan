@@ -7,12 +7,16 @@ import ru.chatan.app.domain.usecases.SignInAutoUseCase
 import ru.chatan.app.presentation.User
 import ru.efremovkirill.localstorage.LocalStorage
 
-
 class StartViewModel(
     private val signInAutoUseCase: SignInAutoUseCase
 ): StateViewModel<StartState, StartEvent>(StartState.initial()) {
 
     init {
+        val localStorage = LocalStorage.newInstance()
+        val deviceId = localStorage.get("deviceId")
+        val refreshToken = localStorage.get(LocalStorage.REFRESH_TOKEN)
+        Log.d("StartScreen", "deviceId: $deviceId\nrefreshToken: $refreshToken")
+
         send(event = StartEvent.SignInAuto)
     }
 

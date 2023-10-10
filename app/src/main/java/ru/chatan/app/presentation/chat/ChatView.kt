@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -38,6 +38,8 @@ import kotlinx.coroutines.launch
 import org.kodein.di.instance
 import ru.chatan.app.di.di
 import ru.chatan.app.domain.models.chat.Chat
+import ru.chatan.app.domain.models.message.ChatMessage
+import ru.chatan.app.domain.models.message.MessageType
 import ru.chatan.app.domain.models.message.SendMessage
 import ru.chatan.app.presentation.elements.ChatMessageView
 import ru.chatan.app.presentation.elements.ChatToolBarView
@@ -87,16 +89,17 @@ fun ChatView(
                     state = lazyListState,
                     reverseLayout = true
                 ) {
-                    items(
+                    itemsIndexed(
                         items = state.messages,
-                        key = {
-                            it.id
+                        key = { _, item ->
+                            item.id
                         }
-                    ) { chatMessage ->
+                    ) { index, chatMessage ->
                         ChatMessageView(
                             modifier = Modifier.animateItemPlacement(),
                             self = chatMessage.user?.name == userName,
-                            chatMessage = chatMessage
+                            chatMessage = chatMessage,
+                            messageType = getMessageType(index = index, messages = state.messages)
                         )
                     }
 
@@ -146,12 +149,32 @@ fun ChatView(
     }
 }
 
+/**
+ * Remember that messages going from bottom of screen
+ */
+private fun getMessageType(index: Int, messages: List<ChatMessage>): MessageType {
+    val nextMessageUserName = messages.getOrNull(index - 1)?.user?.name
+    val currentMessageUserName = messages[index].user?.name
+    val previousMessageUserName = messages.getOrNull(index + 1)?.user?.name
+
+    if (currentMessageUserName == previousMessageUserName && currentMessageUserName == nextMessageUserName)
+        return MessageType.MIDDLE
+
+    if (currentMessageUserName != previousMessageUserName && currentMessageUserName == nextMessageUserName)
+        return MessageType.TOP
+
+    if (currentMessageUserName == previousMessageUserName)
+        return MessageType.END
+
+    return MessageType.SINGLE
+}
+
 @Preview
 @Composable
 fun ChatViewPreview() {
     ChatanTheme {
         val viewModel: ChatViewModel by di.instance()
-        val chat = Chat(chatId = 0, name = "CHATAN!")
+        val chat = Chat(id = 0, name = "CHATAN!")
 
         ChatView(chat = chat, viewModel = viewModel, userName = "Alan Walker")
     }
