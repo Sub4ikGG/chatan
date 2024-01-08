@@ -76,7 +76,7 @@ fun ChatToolBarView(
                         .clip(CircleShape),
                     contentScale = ContentScale.Crop,
                     painter = painterResource(id = R.drawable.sample_avatar),
-                    contentDescription = "Sample avatar"
+                    contentDescription = "$text avatar"
                 )
             }
         }

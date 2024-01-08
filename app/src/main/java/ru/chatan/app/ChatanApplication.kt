@@ -1,7 +1,9 @@
 package ru.chatan.app
 
 import android.app.Application
-import android.util.Log
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.initialize
+import com.google.firebase.messaging.FirebaseMessaging
 import io.ktor.http.URLProtocol
 import ru.efremovkirill.ktorhandler.KtorClient
 import ru.efremovkirill.localstorage.LocalStorage
@@ -15,6 +17,20 @@ class ChatanApplication: Application() {
         configureLocalStorage()
         configureKtor()
         configureDeviceId()
+        configureFirebase()
+    }
+
+    private fun configureFirebase() {
+        val localStorage = LocalStorage.newInstance()
+
+        Firebase.initialize(applicationContext)
+        FirebaseMessaging.getInstance().token.addOnSuccessListener { token: String? ->
+            localStorage.save(key = FIREBASE_TOKEN, data = token.orEmpty())
+
+            DLog.d(TAG, "configureFirebase: $token")
+        }.addOnFailureListener { failure ->
+            DLog.e(TAG, "setFirebase: $failure")
+        }
     }
 
     private fun configureDeviceId() {
@@ -22,7 +38,7 @@ class ChatanApplication: Application() {
         if (localStorage.has("deviceId")) return
 
         val deviceId = generateDeviceId()
-        Log.d(TAG, "generateDeviceId: $deviceId")
+        DLog.d(TAG, "generateDeviceId: $deviceId")
 
         localStorage.save("deviceId", deviceId)
     }
@@ -42,7 +58,7 @@ class ChatanApplication: Application() {
             tokenRefreshPath = TOKEN_REFRESH_PATH,
             serviceStatusListener = object : KtorClient.ServiceStatusListener {
                 override fun onServiceStatusChanged(status: Boolean) {
-                    Log.i(TAG, "onServiceStatusChanged: $status")
+                    DLog.d(TAG, "onServiceStatusChanged: $status")
                 }
             }
         )
@@ -54,6 +70,8 @@ class ChatanApplication: Application() {
         private const val HOST = "api.chatan.ru"
         private const val TOKEN_REFRESH_HOST = "api.chatan.ru"
         private const val TOKEN_REFRESH_PATH = "/token-refresh"
+
+        const val FIREBASE_TOKEN = "firebaseToken"
     }
 
 }

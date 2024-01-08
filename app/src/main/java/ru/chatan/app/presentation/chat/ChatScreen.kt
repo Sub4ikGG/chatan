@@ -27,7 +27,7 @@ class ChatScreen(
         ChatView(
             chat = chat,
             viewModel = viewModel,
-            userName = User.name,
+            userName = User.user?.name.orEmpty(),
         )
     }
 

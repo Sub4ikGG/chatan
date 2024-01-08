@@ -2,11 +2,13 @@ package ru.chatan.app.presentation.chat
 
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -38,6 +40,7 @@ import kotlinx.coroutines.launch
 import org.kodein.di.instance
 import ru.chatan.app.di.di
 import ru.chatan.app.domain.models.chat.Chat
+import ru.chatan.app.domain.models.chat.ChatAvatar
 import ru.chatan.app.domain.models.message.ChatMessage
 import ru.chatan.app.domain.models.message.MessageType
 import ru.chatan.app.domain.models.message.SendMessage
@@ -68,8 +71,10 @@ fun ChatView(
     Scaffold { contentPadding ->
         Column(
             modifier = Modifier
-                .padding(contentPadding)
                 .fillMaxSize()
+                .background(Color.White)
+                .padding(contentPadding)
+                .imePadding()
         ) {
             ChatToolBarView(
                 text = chat.name,
@@ -174,7 +179,12 @@ private fun getMessageType(index: Int, messages: List<ChatMessage>): MessageType
 fun ChatViewPreview() {
     ChatanTheme {
         val viewModel: ChatViewModel by di.instance()
-        val chat = Chat(id = 0, name = "CHATAN!")
+        val chat = Chat(
+            id = 0, name = "CHATAN!",
+            description = "",
+            code = "",
+            avatar = ChatAvatar("")
+        )
 
         ChatView(chat = chat, viewModel = viewModel, userName = "Alan Walker")
     }

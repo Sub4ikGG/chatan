@@ -1,6 +1,7 @@
 package ru.chatan.app.presentation.elements
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -18,9 +19,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.chatan.app.presentation.theme.ChatanTheme
+import ru.chatan.app.presentation.theme.HardBlue
 
 @Composable
-fun BasicBlackButton(
+fun BasicButton(
     modifier: Modifier = Modifier,
     text: String = "CHATAN",
     enabled: Boolean = true,
@@ -28,10 +30,10 @@ fun BasicBlackButton(
     onClick: () -> Unit = {}
 ) {
     Button(
-        modifier = modifier.height(48.dp),
+        modifier = modifier.defaultMinSize(minHeight = 48.dp),
         shape = RoundedCornerShape(10.dp),
         enabled = enabled,
-        colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+        colors = ButtonDefaults.buttonColors(containerColor = HardBlue),
         onClick = {
             if (!loading)
                 onClick()
@@ -54,7 +56,7 @@ fun BasicBlackButton(
 @Composable
 fun BasicBlackButtonPreview() {
     ChatanTheme {
-        BasicBlackButton(
+        BasicButton(
             modifier = Modifier.width(256.dp).height(48.dp),
             loading = true,
             text = "Приступить"

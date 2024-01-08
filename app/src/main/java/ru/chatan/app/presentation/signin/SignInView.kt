@@ -28,7 +28,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import org.kodein.di.instance
 import ru.chatan.app.di.di
 import ru.chatan.app.presentation.chats.ChatsScreen
-import ru.chatan.app.presentation.elements.BasicBlackButton
+import ru.chatan.app.presentation.elements.BasicButton
 import ru.chatan.app.presentation.elements.BasicTextFieldView
 import ru.chatan.app.presentation.elements.BasicToolBarView
 
@@ -103,7 +103,7 @@ fun SignInView(
 
                         Spacer(modifier = Modifier.weight(1f))
 
-                        BasicBlackButton(
+                        BasicButton(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 16.dp),

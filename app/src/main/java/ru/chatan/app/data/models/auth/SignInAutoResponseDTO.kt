@@ -1,13 +1,14 @@
 package ru.chatan.app.data.models.auth
 
 import kotlinx.serialization.Serializable
+import ru.chatan.app.data.models.user.UserDTO
 import ru.chatan.app.domain.models.auth.SignInAutoResponse
 
 @Serializable
 data class SignInAutoResponseDTO(
-    val name: String
+    val user: UserDTO
 ) {
     fun toModel() = SignInAutoResponse(
-        name = name
+        user = user.toModel()
     )
 }

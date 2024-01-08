@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.chatan.app.R
 import ru.chatan.app.domain.models.chat.Chat
+import ru.chatan.app.domain.models.chat.ChatAvatar
 import ru.chatan.app.presentation.elements.basicClickable
 import ru.chatan.app.presentation.theme.ChatanTheme
 
@@ -58,7 +59,7 @@ fun ChatItemView(
                     .clip(CircleShape),
                 contentScale = ContentScale.Crop,
                 painter = painterResource(id = R.drawable.sample_avatar),
-                contentDescription = "Sample avatar"
+                contentDescription = "${chat.name} avatar"
             )
 
             Column(
@@ -113,7 +114,10 @@ private fun ChatItemViewPreview() {
     ChatanTheme {
         val chat = Chat(
             id = 0,
-            name = "CHATAN! Official"
+            name = "CHATAN! Official",
+            description = "",
+            code = "",
+            avatar = ChatAvatar("")
         )
 
         ChatItemView(chat = chat, click = {})

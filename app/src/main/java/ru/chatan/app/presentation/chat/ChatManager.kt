@@ -1,11 +1,16 @@
 package ru.chatan.app.presentation.chat
 
 import android.util.Log
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import io.ktor.client.plugins.websocket.DefaultClientWebSocketSession
-import io.ktor.client.plugins.websocket.receiveDeserialized
 import io.ktor.client.plugins.websocket.sendSerialized
 import io.ktor.client.plugins.websocket.webSocket
+import io.ktor.websocket.Frame
+import io.ktor.websocket.FrameType
 import io.ktor.websocket.close
+import io.ktor.websocket.readReason
+import io.ktor.websocket.readText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -18,7 +23,6 @@ import ru.chatan.app.UNDEFINED_ERROR
 import ru.chatan.app.data.models.chat.AccessDataDTO
 import ru.chatan.app.data.models.message.ChatMessageDTO
 import ru.chatan.app.data.models.message.SendMessageDTO
-import ru.chatan.app.domain.models.chat.ChatUser
 import ru.chatan.app.domain.models.message.ChatMessage
 import ru.chatan.app.presentation.User
 import ru.efremovkirill.ktorhandler.KtorClient
@@ -51,7 +55,7 @@ class ChatManager {
                             session = this
                             onChatManagerListener?.onInitialized()
 
-                            receiveMessages()
+                            receiveMessages(chatId = chatId)
                             sendAccessData(chatId = chatId).join()
                             while (scope.isActive) delay(10L)
                         }
@@ -100,11 +104,13 @@ class ChatManager {
         )
 
         val messages = messagesFlow.value.toMutableList()
+        val user = User.user ?: return@launch
+
         messages.add(
             0,
             ChatMessage(
                 id = System.currentTimeMillis(),
-                user = ChatUser(id = 0, name = User.name),
+                user = user,
                 body = body,
                 date = System.currentTimeMillis() / 1000
             )
@@ -113,14 +119,54 @@ class ChatManager {
         mutableMessagesFlow.emit(messages)
     }
 
-    private fun receiveMessages() = scope.launch {
+    private fun receiveMessages(chatId: Long) = scope.launch {
         Log.d(TAG, "receiveMessages")
         while (session != null) {
             try {
-                val data = session?.receiveDeserialized<List<ChatMessageDTO>>()
-                Log.d(TAG, "receive: $data")
-                data?.also { mutableMessagesFlow.emit(data.map { it.toModel() }) }
+                val incoming = session?.incoming?.receive()
+                when (incoming?.frameType) {
+                    FrameType.TEXT -> {
+                        val frame = incoming as Frame.Text?
+                        val data = frame?.readText()
+                        val listType = object : TypeToken<List<ChatMessageDTO>>() {}.type
+                        val message: List<ChatMessageDTO>? = Gson().fromJson(data, listType)
+
+                        Log.d(TAG, "receive: $data")
+                        message?.also { mutableMessagesFlow.emit(message.map { it.toModel() }) }
+                    }
+                    FrameType.BINARY -> {
+//                        TODO()
+                    }
+                    FrameType.CLOSE -> {
+                        val frame = incoming as Frame.Close?
+                        val reason = frame?.readReason()
+
+                        when (reason?.code?.toInt()) {
+                            401 -> {
+                                if (KtorClient.updateTokens())
+                                    initialize(chatId = chatId)
+                                else throw Exception("tokens update failed")
+                            }
+
+                            else -> {
+                                throw Exception("unresolved code ${reason?.code}")
+                            }
+                        }
+                    }
+                    FrameType.PING -> {
+//                        TODO()
+                    }
+                    FrameType.PONG -> {
+//                        TODO()
+                    }
+                    null -> {
+//                        TODO()
+                    }
+                }
             } catch (e: Exception) {
+                if (!scope.isActive) return@launch
+
+                Log.e(TAG, "receiveMessages: ${e.localizedMessage}")
                 onDispose()
             }
         }

@@ -392,7 +392,7 @@ object KtorClient {
             return null
     }
 
-    private suspend fun updateTokens(): Boolean {
+    suspend fun updateTokens(): Boolean {
 
         // Закрываем mutex
         val lockResult = tokenRefreshMutex.tryLock()

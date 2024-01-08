@@ -33,7 +33,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import org.kodein.di.instance
 import ru.chatan.app.di.*
 import ru.chatan.app.presentation.chat.ChatScreen
-import ru.chatan.app.presentation.elements.BasicBlackButton
+import ru.chatan.app.presentation.elements.BasicButton
 import ru.chatan.app.presentation.elements.BasicToolBarView
 import ru.chatan.app.presentation.theme.ChatanTheme
 
@@ -124,7 +124,7 @@ fun ConnectChatView(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                BasicBlackButton(
+                BasicButton(
                     modifier = Modifier.fillMaxWidth(),
                     text = state.error ?: "Присоединиться",
                     onClick = {

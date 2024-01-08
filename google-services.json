@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "686508200110",
+    "project_id": "chatan-c4c33",
+    "storage_bucket": "chatan-c4c33.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:686508200110:android:5d32366eb1db06fe63dd3f",
+        "android_client_info": {
+          "package_name": "ru.chatan.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJKz_sFWikAp2Pl4FpTJh2EJBBgWPWOXU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

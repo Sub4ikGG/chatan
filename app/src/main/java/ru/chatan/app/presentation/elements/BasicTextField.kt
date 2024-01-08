@@ -35,13 +35,21 @@ fun BasicTextFieldView(
     hint: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
     onValueChange: (String) -> Unit,
-    onClear: () -> Unit
+    onClear: () -> Unit,
+    mask: String = "",
+    singleLine: Boolean = true
 ) {
+    val visualTransformation =
+        if (keyboardOptions.keyboardType == KeyboardType.Password)
+            PasswordVisualTransformation()
+        else if (mask.isNotBlank()) MaskVisualTransformation(mask)
+        else VisualTransformation.None
+
     Box {
         OutlinedTextField(
             modifier = modifier,
             value = text,
-            visualTransformation = if (keyboardOptions.keyboardType == KeyboardType.Password) PasswordVisualTransformation() else VisualTransformation.None,
+            visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
             shape = RoundedCornerShape(10.dp),
             trailingIcon = {
@@ -55,7 +63,7 @@ fun BasicTextFieldView(
                     )
                 }
             },
-            singleLine = true,
+            singleLine = singleLine,
             onValueChange = onValueChange,
             label = { Text(text = hint) }
         )
@@ -67,7 +75,7 @@ fun BasicTextFieldView(
 fun BasicTextFieldPreview() {
     ChatanTheme {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            var text by remember { mutableStateOf("Hello, CHATAN!") }
+            var text by remember { mutableStateOf("Hello, CHATAN! how to you fdsf f orma reomfn dohe odfjrel dleoqfnbkd") }
             BasicTextFieldView(
                 modifier = Modifier
                     .fillMaxWidth()

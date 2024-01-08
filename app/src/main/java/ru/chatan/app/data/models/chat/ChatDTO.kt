@@ -8,10 +8,14 @@ data class ChatDTO(
     val id: Long,
     val code: String,
     val description: String,
-    val name: String
+    val name: String,
+    val avatar: ChatAvatarDTO
 ) {
     fun toModel() = Chat(
         id = id,
-        name = name
+        name = name,
+        description = description,
+        code = code,
+        avatar = avatar.toModel()
     )
 }

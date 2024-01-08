@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import ru.chatan.app.R
-import ru.chatan.app.presentation.elements.BasicBlackButton
+import ru.chatan.app.presentation.elements.BasicButton
 import ru.chatan.app.presentation.elements.basicClickable
 import ru.chatan.app.presentation.signin.SignInScreen
 import ru.chatan.app.presentation.signup.SignUpScreen
@@ -78,7 +78,7 @@ fun WelcomeView() {
                     Row(
                         modifier = Modifier
                     ) {
-                        BasicBlackButton(
+                        BasicButton(
                             modifier = Modifier
                                 .weight(1f),
                             text = "Приступить",

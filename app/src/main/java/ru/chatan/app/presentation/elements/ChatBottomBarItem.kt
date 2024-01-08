@@ -1,5 +1,7 @@
 package ru.chatan.app.presentation.elements
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
@@ -17,19 +19,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.chatan.app.presentation.theme.ChatanTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ChatBottomBarItem(
     modifier: Modifier,
     imageVector: ImageVector,
     text: String,
     contentDescription: String = "Bottom bar item",
-    click: () -> Unit = {}
+    click: () -> Unit = {},
+    longClick: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
-            .basicClickable {
-                click()
-            },
+            .combinedClickable(
+                onClick = click,
+                onLongClick = longClick
+            )
+        ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
